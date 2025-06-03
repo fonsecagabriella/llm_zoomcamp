@@ -6,3 +6,4 @@ The primary objective is to build a question-answering (Q&A) system using freque
 
 - **Implementation and Practical Application**
 At the end of the course, students will have developed a functional Q&A system that integrates an LLM with a knowledge base of FAQ documents. This interface will likely be implemented via a simple user interface, such as through Streamlit, allowing easy question input and answer output.
+

@@ -50,3 +50,82 @@ Both components of the RAG framework — the retrieval system and the LLM — ar
 👩🏽‍💻 [Link to workshop - Building your own search engine](https://github.com/alexeygrigorev/build-your-own-search-engine/blob/main/notebook.ipynb)
 
 - Documents containing FAQ data should be parsed in Json for efficiency: [parser script](./parse-faq.ipynb)
+
+## 1.4 Running ElasticSearch
+
+📺 [Link to the video](https://www.youtube.com/watch?v=1lgbR5wMvsI)
+
+👩🏽‍💻 [Working file](./rag-intro.ipynb)
+
+- Running ElasticSearch from Docker:
+
+```bash
+docker run -it \
+    --rm \
+    --name elasticsearch \
+    -m 4GB \
+    -p 9200:9200 \
+    -p 9300:9300 \
+    -e "discovery.type=single-node" \
+    -e "xpack.security.enabled=false" \
+    docker.elastic.co/elasticsearch/elasticsearch:8.4.3
+```
+
+If the previous command doesn't work (i.e. you see "error pulling image configuration"), try to run ElasticSearch directly from Docker Hub:
+
+```bash
+docker run -it \
+    --rm \
+    --name elasticsearch \
+    -p 9200:9200 \
+    -p 9300:9300 \
+    -e "discovery.type=single-node" \
+    -e "xpack.security.enabled=false" \
+    elasticsearch:8.4.3
+```
+
+- Test if works in the terminal `curl https://localhost:9200/`
+
+- Index settings:
+
+```bash
+{
+    "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0
+    },
+    "mappings": {
+        "properties": {
+            "text": {"type": "text"},
+            "section": {"type": "text"},
+            "question": {"type": "text"},
+            "course": {"type": "keyword"} 
+        }
+    }
+}
+```
+
+- Query:
+
+```bash
+{
+    "size": 5,
+    "query": {
+        "bool": {
+            "must": {
+                "multi_match": {
+                    "query": query,
+                    "fields": ["question^3", "text", "section"],
+                    "type": "best_fields"
+                }
+            },
+            "filter": {
+                "term": {
+                    "course": "data-engineering-zoomcamp"
+                }
+            }
+        }
+    }
+}
+
+```
