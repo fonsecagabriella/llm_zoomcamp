@@ -1,4 +1,4 @@
-# Introduction - LLM Zoomcamp
+# Introduction - LLM Zoomcamp | Week 01
 
 ➡️ [LLMs options](https://github.com/DataTalksClub/llm-zoomcamp/blob/main/awesome-llms.md#openai-api-alternatives)
 
